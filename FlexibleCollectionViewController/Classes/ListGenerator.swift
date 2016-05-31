@@ -15,7 +15,7 @@ public struct ListGenerator<Item: CellDataProtocol>: ListGeneratorProtocol {
         return _data?.count
     }
     
-    init() {
+    public init() {
         // empty
     }
     

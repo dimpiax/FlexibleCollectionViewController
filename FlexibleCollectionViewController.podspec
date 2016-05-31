@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'FlexibleCollectionViewController'
-  s.version          = '0.1.0'
-  s.summary          = 'A short description of FlexibleCollectionViewController.'
+  s.version          = '1.0.1'
+  s.summary          = 'Generic collection view controller with external data processing'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,15 +18,15 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+Swift library of generic collection view controller with external data processing of functionality, like determine cell’s reuseIdentifier related to indexPath, configuration of requested cell for display and cell selection handler
                        DESC
 
-  s.homepage         = 'https://github.com/<GITHUB_USERNAME>/FlexibleCollectionViewController'
+  s.homepage         = 'https://github.com/dimpiax/FlexibleCollectionViewController'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Pilipenko Dima' => 'dimpiax@gmail.com' }
-  s.source           = { :git => 'https://github.com/<GITHUB_USERNAME>/FlexibleCollectionViewController.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.source           = { :git => 'https://github.com/dimpiax/FlexibleCollectionViewController.git', :tag => s.version.to_s }
+  s.social_media_url = 'https://twitter.com/dimpiax'
 
   s.ios.deployment_target = '8.0'
 
