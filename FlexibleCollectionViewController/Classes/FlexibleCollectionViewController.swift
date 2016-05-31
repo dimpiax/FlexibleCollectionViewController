@@ -11,13 +11,13 @@ import UIKit
 
 public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGeneratorProtocol where U.Item == T>: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     public var requestCellIdentifier: (NSIndexPath -> String?)?
-    public var requestSupplementaryIdentifier: ((indexPath: NSIndexPath, kind: String) -> String?)?
+    public var requestSupplementaryIdentifier: ((indexPath: NSIndexPath, kind: SupplementaryKind) -> String?)?
     
     public var configureCell: ((UICollectionViewCell, T?) -> Bool)?
     public var cellDidSelect: (NSIndexPath -> Bool)?
     public var estimateCellSize: ((collectionView: UICollectionView, collectionViewLayout: UICollectionViewLayout, indexPath: NSIndexPath) -> CGSize?)?
     
-    public var configureSupplementary: ((UICollectionReusableView, T?) -> Bool)?
+    public var configureSupplementary: ((view: UICollectionReusableView, kind: SupplementaryKind, T?) -> Bool)?
     
     private var _data: TableData<T, U>?
     
@@ -65,7 +65,7 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
     }
     
     public override func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
-        guard let identifier = requestSupplementaryIdentifier?(indexPath: indexPath, kind: kind) else {
+        guard let identifier = requestSupplementaryIdentifier?(indexPath: indexPath, kind: SupplementaryKind(value: kind)) else {
             return UICollectionReusableView()
         }
         
@@ -87,7 +87,7 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
             return
         }
         
-        guard configureSupplementary?(view, itemData) == true else {
+        guard configureSupplementary?(view: view, kind: SupplementaryKind(value: elementKind), itemData) == true else {
             return
         }
     }

@@ -50,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return true
         }
         
-        _flexibleCollectionVC.configureSupplementary = { (view: UICollectionReusableView, data: CollectionImageCellData?) in
+        _flexibleCollectionVC.configureSupplementary = { (view: UICollectionReusableView, kind: SupplementaryKind, data: CollectionImageCellData?) in
             if let view = view as? UIHeaderImageCollectionView, data = data {
                 
                 view.text = data.category

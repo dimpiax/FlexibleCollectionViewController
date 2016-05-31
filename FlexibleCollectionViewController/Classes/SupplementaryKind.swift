@@ -12,6 +12,14 @@ import UIKit
 public enum SupplementaryKind {
     case Header, Footer, Custom(String)
     
+    init(value: String) {
+        switch value {
+            case UICollectionElementKindSectionHeader: self = .Header
+            case UICollectionElementKindSectionFooter: self = .Footer
+            default: self = .Custom(value)
+        }
+    }
+    
     var type: String {
         switch self {
             case .Header: return UICollectionElementKindSectionHeader

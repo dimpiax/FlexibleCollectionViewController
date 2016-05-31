@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'FlexibleCollectionViewController'
-  s.version          = '1.0.2'
+  s.version          = '1.0.3'
   s.summary          = 'Generic collection view controller with external data processing'
 
 # This description is used to generate tags and improve search results.
