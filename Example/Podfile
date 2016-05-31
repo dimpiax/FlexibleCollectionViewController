@@ -1,11 +1,5 @@
 use_frameworks!
 
 target 'FlexibleCollectionViewController_Example' do
-  pod 'FlexibleCollectionViewController', :path => '../'
-
-  target 'FlexibleCollectionViewController_Tests' do
-    inherit! :search_paths
-
-    
-  end
+  pod 'FlexibleCollectionViewController', :path => '../' 
 end

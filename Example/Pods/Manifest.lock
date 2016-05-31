@@ -1,0 +1,14 @@
+PODS:
+  - FlexibleCollectionViewController (1.0.0)
+
+DEPENDENCIES:
+  - FlexibleCollectionViewController (from `../`)
+
+EXTERNAL SOURCES:
+  FlexibleCollectionViewController:
+    :path: ../
+
+SPEC CHECKSUMS:
+  FlexibleCollectionViewController: 999d58a99a98c5e0094a253a359bd1020464221a
+
+COCOAPODS: 0.39.0

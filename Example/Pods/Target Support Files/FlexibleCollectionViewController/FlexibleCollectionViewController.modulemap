@@ -1,0 +1,6 @@
+framework module FlexibleCollectionViewController {
+  umbrella header "FlexibleCollectionViewController-umbrella.h"
+
+  export *
+  module * { export * }
+}
