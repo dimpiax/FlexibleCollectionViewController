@@ -20,7 +20,7 @@ public enum SupplementaryKind {
         }
     }
     
-    var type: String {
+    public var type: String {
         switch self {
             case .Header: return UICollectionElementKindSectionHeader
             case .Footer: return UICollectionElementKindSectionFooter
