@@ -13,11 +13,13 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
     public var requestCellIdentifier: (NSIndexPath -> String?)?
     public var requestSupplementaryIdentifier: ((indexPath: NSIndexPath, kind: SupplementaryKind) -> String?)?
     
-    public var configureCell: ((UICollectionViewCell, T?) -> Bool)?
+    public var configureCell: ((cell: UICollectionViewCell, data: T?, indexPath: NSIndexPath) -> Bool)?
     public var cellDidSelect: (NSIndexPath -> Bool)?
     public var estimateCellSize: ((collectionView: UICollectionView, collectionViewLayout: UICollectionViewLayout, indexPath: NSIndexPath) -> CGSize?)?
     
-    public var configureSupplementary: ((view: UICollectionReusableView, kind: SupplementaryKind, T?) -> Bool)?
+    public var configureSupplementary: ((view: UICollectionReusableView, kind: SupplementaryKind, data: T?, indexPath: NSIndexPath) -> Bool)?
+    
+    public var scrollViewDidScroll: ((scrollView: UIScrollView) -> Void)?
     
     private var _data: TableData<T, U>?
     
@@ -56,7 +58,7 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
     }
     
     // UICollectionViewDataSource
-    override public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    public override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         guard let identifier = requestCellIdentifier?(indexPath) else {
             return UICollectionViewCell()
         }
@@ -72,12 +74,12 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
         return collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: identifier, forIndexPath: indexPath)
     }
     
-    override public func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+    public override func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         guard let itemData = _data?.getItem(indexPath) else {
             return
         }
         
-        guard configureCell?(cell, itemData) == true else {
+        guard configureCell?(cell: cell, data: itemData, indexPath: indexPath) == true else {
             return
         }
     }
@@ -87,17 +89,21 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
             return
         }
         
-        guard configureSupplementary?(view: view, kind: SupplementaryKind(value: elementKind), itemData) == true else {
+        guard configureSupplementary?(view: view, kind: SupplementaryKind(value: elementKind), data: itemData, indexPath: indexPath) == true else {
             return
         }
     }
     
-    override public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return _data?.getRowsInSection(section) ?? 0
     }
     
-    override public func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    public override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return _data?.sections ?? 1
+    }
+    
+    public override func scrollViewDidScroll(scrollView: UIScrollView) {
+        scrollViewDidScroll?(scrollView: scrollView)
     }
     
     // UICollectionViewDelegate
@@ -111,7 +117,7 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
         
     }
     
-    //
+    // UICollectionViewDelegateFlowLayout
     public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         if let size = estimateCellSize?(collectionView: collectionView, collectionViewLayout: collectionViewLayout, indexPath: indexPath) {
             return size
