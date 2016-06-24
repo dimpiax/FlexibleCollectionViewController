@@ -20,6 +20,7 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
     public var configureSupplementary: ((view: UICollectionReusableView, kind: SupplementaryKind, data: T?, indexPath: NSIndexPath) -> Bool)?
     
     public var scrollViewDidScroll: ((scrollView: UIScrollView) -> Void)?
+    public var scrollViewDidEndDragging: ((scrollView: UIScrollView, willDecelerate: Bool) -> Void)?
     
     private var _data: TableData<T, U>?
     
@@ -104,6 +105,10 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
     
     public override func scrollViewDidScroll(scrollView: UIScrollView) {
         scrollViewDidScroll?(scrollView: scrollView)
+    }
+    
+    public override func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        scrollViewDidEndDragging?(scrollView: scrollView, willDecelerate: decelerate)
     }
     
     // UICollectionViewDelegate

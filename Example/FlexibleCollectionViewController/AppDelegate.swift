@@ -40,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return UIHeaderImageCollectionView.reuseIdentifier
         }
         
-        _flexibleCollectionVC.configureCell = { (cell: UICollectionViewCell, data: CollectionImageCellData?) in
+        _flexibleCollectionVC.configureCell = { (cell: UICollectionViewCell, data: CollectionImageCellData?, indexPath: NSIndexPath) in
             guard let data = data else {
                 return false
             }
@@ -50,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return true
         }
         
-        _flexibleCollectionVC.configureSupplementary = { (view: UICollectionReusableView, kind: SupplementaryKind, data: CollectionImageCellData?) in
+        _flexibleCollectionVC.configureSupplementary = { (view: UICollectionReusableView, kind: SupplementaryKind, data: CollectionImageCellData?, indexPath: NSIndexPath) in
             if let view = view as? UIHeaderImageCollectionView, data = data {
                 
                 view.text = data.category
