@@ -14,10 +14,12 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
     public var requestSupplementaryIdentifier: ((indexPath: NSIndexPath, kind: SupplementaryKind) -> String?)?
     
     public var configureCell: ((cell: UICollectionViewCell, data: T?, indexPath: NSIndexPath) -> Bool)?
+    public var willDisplayCell: ((cell: UICollectionViewCell, data: T?, indexPath: NSIndexPath) -> Bool)?
     public var cellDidSelect: (NSIndexPath -> Bool)?
     public var estimateCellSize: ((collectionView: UICollectionView, collectionViewLayout: UICollectionViewLayout, indexPath: NSIndexPath) -> CGSize?)?
     
     public var configureSupplementary: ((view: UICollectionReusableView, kind: SupplementaryKind, data: T?, indexPath: NSIndexPath) -> Bool)?
+    public var willDisplaySupplementary: ((view: UICollectionReusableView, kind: SupplementaryKind, data: T?, indexPath: NSIndexPath) -> Bool)?
     
     public var scrollViewDidScroll: ((scrollView: UIScrollView) -> Void)?
     public var scrollViewDidEndDragging: ((scrollView: UIScrollView, willDecelerate: Bool) -> Void)?
@@ -64,7 +66,10 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
             return UICollectionViewCell()
         }
         
-        return collectionView.dequeueReusableCellWithReuseIdentifier(identifier, forIndexPath: indexPath)
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(identifier, forIndexPath: indexPath)
+        configureCell?(cell: cell, data: _data?.getItem(indexPath), indexPath: indexPath)
+        
+        return cell
     }
     
     public override func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
@@ -72,7 +77,10 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
             return UICollectionReusableView()
         }
         
-        return collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: identifier, forIndexPath: indexPath)
+        let view = collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: identifier, forIndexPath: indexPath)
+        configureSupplementary?(view: view, kind: SupplementaryKind(value: kind), data: _data?.getItem(indexPath), indexPath: indexPath)
+        
+        return view
     }
     
     public override func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
@@ -80,7 +88,7 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
             return
         }
         
-        guard configureCell?(cell: cell, data: itemData, indexPath: indexPath) == true else {
+        guard willDisplayCell?(cell: cell, data: itemData, indexPath: indexPath) == true else {
             return
         }
     }
@@ -90,7 +98,7 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
             return
         }
         
-        guard configureSupplementary?(view: view, kind: SupplementaryKind(value: elementKind), data: itemData, indexPath: indexPath) == true else {
+        guard willDisplaySupplementary?(view: view, kind: SupplementaryKind(value: elementKind), data: itemData, indexPath: indexPath) == true else {
             return
         }
     }
@@ -129,5 +137,23 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
         }
         
         return CGSize(width: 25, height: 25)
+    }
+    
+    deinit {
+        requestCellIdentifier = nil
+        requestSupplementaryIdentifier = nil
+        
+        configureCell = nil
+        willDisplayCell = nil
+        cellDidSelect = nil
+        estimateCellSize = nil
+        
+        configureSupplementary = nil
+        willDisplaySupplementary = nil
+        
+        scrollViewDidScroll = nil
+        scrollViewDidEndDragging = nil
+        
+        _data = nil
     }
 }
