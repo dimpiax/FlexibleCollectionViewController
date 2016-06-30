@@ -15,11 +15,14 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
     
     public var configureCell: ((cell: UICollectionViewCell, data: T?, indexPath: NSIndexPath) -> Bool)?
     public var willDisplayCell: ((cell: UICollectionViewCell, data: T?, indexPath: NSIndexPath) -> Bool)?
-    public var cellDidSelect: (NSIndexPath -> Bool)?
+    public var didEndDisplayingCell: ((cell: UICollectionViewCell, data: T?, indexPath: NSIndexPath) -> Bool)?
+    public var cellDidSelect: (NSIndexPath -> (deselect: Bool, animate: Bool)?)?
+    public var cellDidDeselect: (NSIndexPath -> Bool)?
     public var estimateCellSize: ((collectionView: UICollectionView, collectionViewLayout: UICollectionViewLayout, indexPath: NSIndexPath) -> CGSize?)?
     
     public var configureSupplementary: ((view: UICollectionReusableView, kind: SupplementaryKind, data: T?, indexPath: NSIndexPath) -> Bool)?
     public var willDisplaySupplementary: ((view: UICollectionReusableView, kind: SupplementaryKind, data: T?, indexPath: NSIndexPath) -> Bool)?
+    public var didEndDisplayingSupplementary: ((view: UICollectionReusableView, kind: SupplementaryKind, data: T?, indexPath: NSIndexPath) -> Bool)?
     
     public var scrollViewDidScroll: ((scrollView: UIScrollView) -> Void)?
     public var scrollViewDidEndDragging: ((scrollView: UIScrollView, willDecelerate: Bool) -> Void)?
@@ -84,23 +87,19 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
     }
     
     public override func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        guard let itemData = _data?.getItem(indexPath) else {
-            return
-        }
-        
-        guard willDisplayCell?(cell: cell, data: itemData, indexPath: indexPath) == true else {
-            return
-        }
+        willDisplayCell?(cell: cell, data: _data?.getItem(indexPath), indexPath: indexPath)
+    }
+    
+    public override func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        didEndDisplayingCell?(cell: cell, data: _data?.getItem(indexPath), indexPath: indexPath)
     }
     
     public override func collectionView(collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, atIndexPath indexPath: NSIndexPath) {
-        guard let itemData = _data?.getItem(indexPath) else {
-            return
-        }
-        
-        guard willDisplaySupplementary?(view: view, kind: SupplementaryKind(value: elementKind), data: itemData, indexPath: indexPath) == true else {
-            return
-        }
+        willDisplaySupplementary?(view: view, kind: SupplementaryKind(value: elementKind), data: _data?.getItem(indexPath), indexPath: indexPath)
+    }
+    
+    public override func collectionView(collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, atIndexPath indexPath: NSIndexPath) {
+        didEndDisplayingSupplementary?(view: view, kind: SupplementaryKind(value: elementKind), data: _data?.getItem(indexPath), indexPath: indexPath)
     }
     
     public override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -121,13 +120,17 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
     
     // UICollectionViewDelegate
     public override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        if cellDidSelect?(indexPath) == true {
-            collectionView.deselectItemAtIndexPath(indexPath, animated: true)
+        guard let result = cellDidSelect?(indexPath) else {
+            return
+        }
+        
+        if result.deselect {
+            collectionView.deselectItemAtIndexPath(indexPath, animated: result.animate)
         }
     }
     
     public override func collectionView(collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: NSIndexPath) {
-        
+        cellDidDeselect?(indexPath)
     }
     
     // UICollectionViewDelegateFlowLayout
@@ -145,11 +148,13 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
         
         configureCell = nil
         willDisplayCell = nil
+        didEndDisplayingCell = nil
         cellDidSelect = nil
         estimateCellSize = nil
         
         configureSupplementary = nil
         willDisplaySupplementary = nil
+        didEndDisplayingSupplementary = nil
         
         scrollViewDidScroll = nil
         scrollViewDidEndDragging = nil

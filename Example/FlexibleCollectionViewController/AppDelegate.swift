@@ -62,7 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         _flexibleCollectionVC.cellDidSelect = { value in
-            return true
+            return (deselect: true, animate: true)
         }
         
         _flexibleCollectionVC.estimateCellSize = { value in
