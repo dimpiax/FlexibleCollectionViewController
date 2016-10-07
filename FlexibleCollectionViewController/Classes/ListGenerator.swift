@@ -9,7 +9,7 @@
 import Foundation
 
 public struct ListGenerator<Item: CellDataProtocol>: ListGeneratorProtocol {
-    private var _data: [[Item]]?
+    fileprivate var _data: [[Item]]?
     
     public var sections: Int? {
         return _data?.count
@@ -21,7 +21,7 @@ public struct ListGenerator<Item: CellDataProtocol>: ListGeneratorProtocol {
     
     // * FUNCTIONS
     // METHODS
-    public mutating func generate(data: [Item]) {
+    public mutating func generate(_ data: [Item]) {
         var arr = [[Item]]()
         
         var prevCategory: String?
@@ -37,7 +37,7 @@ public struct ListGenerator<Item: CellDataProtocol>: ListGeneratorProtocol {
         _data = arr
     }
     
-    public func getSectionData(value: Int) -> [Item]? {
+    public func getSectionData(_ value: Int) -> [Item]? {
         guard _data != nil else {
             return nil
         }
@@ -49,7 +49,7 @@ public struct ListGenerator<Item: CellDataProtocol>: ListGeneratorProtocol {
         return _data![value]
     }
     
-    public func getData(section: Int, row: Int) -> Item? {
+    public func getData(_ section: Int, row: Int) -> Item? {
         guard let sectionData = getSectionData(section) else {
             return nil
         }

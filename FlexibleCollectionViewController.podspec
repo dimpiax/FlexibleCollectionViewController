@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'FlexibleCollectionViewController'
-  s.version          = '1.1.1'
+  s.version          = '2.0.0'
   s.summary          = 'Generic collection view controller with external data processing'
 
 # This description is used to generate tags and improve search results.
@@ -28,10 +28,10 @@ Swift library of generic collection view controller with external data processin
   s.source           = { :git => 'https://github.com/dimpiax/FlexibleCollectionViewController.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/dimpiax'
 
-  s.platform     = :ios, '8.0'
+  s.platform     = :ios, '10.0'
   s.requires_arc = true
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
 
   s.source_files = 'FlexibleCollectionViewController/Classes/**/*'
   

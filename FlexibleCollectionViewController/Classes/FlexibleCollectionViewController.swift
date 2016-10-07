@@ -9,25 +9,25 @@
 import Foundation
 import UIKit
 
-public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGeneratorProtocol where U.Item == T>: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-    public var requestCellIdentifier: (NSIndexPath -> String?)?
-    public var requestSupplementaryIdentifier: ((indexPath: NSIndexPath, kind: SupplementaryKind) -> String?)?
+open class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGeneratorProtocol>: UICollectionViewController, UICollectionViewDelegateFlowLayout where U.Item == T {
+    open var requestCellIdentifier: ((IndexPath) -> String?)?
+    open var requestSupplementaryIdentifier: ((_ indexPath: IndexPath, _ kind: SupplementaryKind) -> String?)?
     
-    public var configureCell: ((cell: UICollectionViewCell, data: T?, indexPath: NSIndexPath) -> Bool)?
-    public var willDisplayCell: ((cell: UICollectionViewCell, data: T?, indexPath: NSIndexPath) -> Bool)?
-    public var didEndDisplayingCell: ((cell: UICollectionViewCell, data: T?, indexPath: NSIndexPath) -> Bool)?
-    public var cellDidSelect: (NSIndexPath -> (deselect: Bool, animate: Bool)?)?
-    public var cellDidDeselect: (NSIndexPath -> Bool)?
-    public var estimateCellSize: ((collectionView: UICollectionView, collectionViewLayout: UICollectionViewLayout, indexPath: NSIndexPath) -> CGSize?)?
+    open var configureCell: ((_ cell: UICollectionViewCell, _ data: T?, _ indexPath: IndexPath) -> Bool)?
+    open var willDisplayCell: ((_ cell: UICollectionViewCell, _ data: T?, _ indexPath: IndexPath) -> Bool)?
+    open var didEndDisplayingCell: ((_ cell: UICollectionViewCell, _ data: T?, _ indexPath: IndexPath) -> Bool)?
+    open var cellDidSelect: ((IndexPath) -> (deselect: Bool, animate: Bool)?)?
+    open var cellDidDeselect: ((IndexPath) -> Bool)?
+    open var estimateCellSize: ((_ collectionView: UICollectionView, _ collectionViewLayout: UICollectionViewLayout, _ indexPath: IndexPath) -> CGSize?)?
     
-    public var configureSupplementary: ((view: UICollectionReusableView, kind: SupplementaryKind, data: T?, indexPath: NSIndexPath) -> Bool)?
-    public var willDisplaySupplementary: ((view: UICollectionReusableView, kind: SupplementaryKind, data: T?, indexPath: NSIndexPath) -> Bool)?
-    public var didEndDisplayingSupplementary: ((view: UICollectionReusableView, kind: SupplementaryKind, data: T?, indexPath: NSIndexPath) -> Bool)?
+    open var configureSupplementary: ((_ view: UICollectionReusableView, _ kind: SupplementaryKind, _ data: T?, _ indexPath: IndexPath) -> Bool)?
+    open var willDisplaySupplementary: ((_ view: UICollectionReusableView, _ kind: SupplementaryKind, _ data: T?, _ indexPath: IndexPath) -> Bool)?
+    open var didEndDisplayingSupplementary: ((_ view: UICollectionReusableView, _ kind: SupplementaryKind, _ data: T?, _ indexPath: IndexPath) -> Bool)?
     
-    public var scrollViewDidScroll: ((scrollView: UIScrollView) -> Void)?
-    public var scrollViewDidEndDragging: ((scrollView: UIScrollView, willDecelerate: Bool) -> Void)?
+    open var scrollViewDidScroll: ((_ scrollView: UIScrollView) -> Void)?
+    open var scrollViewDidEndDragging: ((_ scrollView: UIScrollView, _ willDecelerate: Bool) -> Void)?
     
-    private var _data: TableData<T, U>?
+    fileprivate var _data: TableData<T, U>?
     
     convenience init(configuration: CollectionConfigurationProtocol) {
         self.init(collectionViewLayout: UICollectionViewFlowLayout(), configuration: configuration)
@@ -36,106 +36,110 @@ public class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenera
     public init(collectionViewLayout layout: UICollectionViewLayout, configuration: CollectionConfigurationProtocol) {
         super.init(collectionViewLayout: layout)
         
-        collectionView!.userInteractionEnabled = configuration.userInteractionEnabled
+        collectionView!.isUserInteractionEnabled = configuration.userInteractionEnabled
         collectionView!.showsHorizontalScrollIndicator = configuration.showsHorizontalScrollIndicator
-        collectionView!.multipleTouchEnabled = configuration.multipleTouchEnabled
+        collectionView!.isMultipleTouchEnabled = configuration.multipleTouchEnabled
         
         collectionView!.delegate = self
         collectionView!.backgroundColor = configuration.backgroundColor
     }
+
+    required public init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
-    public func setData(value: TableData<T, U>) {
+    open func setData(_ value: TableData<T, U>) {
         _data = value
         collectionView?.reloadData()
     }
     
     // * FUNCTIONS
     // METHODS
-    public func registerCell(classs: UICollectionViewCell.Type, reuseIdentifier: String) {
-        collectionView?.registerClass(classs, forCellWithReuseIdentifier: reuseIdentifier)
+    open func register(_ classs: UICollectionViewCell.Type, forCellWithReuseIdentifier reuseIdentifier: String) {
+        collectionView?.register(classs, forCellWithReuseIdentifier: reuseIdentifier)
     }
     
-    public func registerSupplementaryView(classs: UICollectionReusableView.Type, kind: SupplementaryKind, reuseIdentifier: String) {
-        collectionView?.registerClass(classs, forSupplementaryViewOfKind: kind.type, withReuseIdentifier: reuseIdentifier)
+    open func registerSupplementaryView(_ classs: UICollectionReusableView.Type, kind: SupplementaryKind, reuseIdentifier: String) {
+        collectionView?.register(classs, forSupplementaryViewOfKind: kind.type, withReuseIdentifier: reuseIdentifier)
     }
     
-    public func getItemData(indexPath: NSIndexPath) -> T? {
+    open func getItemData(_ indexPath: IndexPath) -> T? {
         return _data?.getItem(indexPath)
     }
     
     // UICollectionViewDataSource
-    public override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    open override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let identifier = requestCellIdentifier?(indexPath) else {
             return UICollectionViewCell()
         }
         
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(identifier, forIndexPath: indexPath)
-        configureCell?(cell: cell, data: _data?.getItem(indexPath), indexPath: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
+        configureCell?(cell, _data?.getItem(indexPath), indexPath)
         
         return cell
     }
     
-    public override func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
-        guard let identifier = requestSupplementaryIdentifier?(indexPath: indexPath, kind: SupplementaryKind(value: kind)) else {
+    open override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard let identifier = requestSupplementaryIdentifier?(indexPath, SupplementaryKind(value: kind)) else {
             return UICollectionReusableView()
         }
         
-        let view = collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: identifier, forIndexPath: indexPath)
-        configureSupplementary?(view: view, kind: SupplementaryKind(value: kind), data: _data?.getItem(indexPath), indexPath: indexPath)
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)
+        configureSupplementary?(view, SupplementaryKind(value: kind), _data?.getItem(indexPath), indexPath)
         
         return view
     }
     
-    public override func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        willDisplayCell?(cell: cell, data: _data?.getItem(indexPath), indexPath: indexPath)
+    open override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        willDisplayCell?(cell, _data?.getItem(indexPath), indexPath)
     }
     
-    public override func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        didEndDisplayingCell?(cell: cell, data: _data?.getItem(indexPath), indexPath: indexPath)
+    open override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        didEndDisplayingCell?(cell, _data?.getItem(indexPath), indexPath)
     }
     
-    public override func collectionView(collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, atIndexPath indexPath: NSIndexPath) {
-        willDisplaySupplementary?(view: view, kind: SupplementaryKind(value: elementKind), data: _data?.getItem(indexPath), indexPath: indexPath)
+    open override func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
+        willDisplaySupplementary?(view, SupplementaryKind(value: elementKind), _data?.getItem(indexPath), indexPath)
     }
     
-    public override func collectionView(collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, atIndexPath indexPath: NSIndexPath) {
-        didEndDisplayingSupplementary?(view: view, kind: SupplementaryKind(value: elementKind), data: _data?.getItem(indexPath), indexPath: indexPath)
+    open override func collectionView(_ collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, at indexPath: IndexPath) {
+        didEndDisplayingSupplementary?(view, SupplementaryKind(value: elementKind), _data?.getItem(indexPath), indexPath)
     }
     
-    public override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    open override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return _data?.getRowsInSection(section) ?? 0
     }
     
-    public override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    open override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return _data?.sections ?? 1
     }
     
-    public override func scrollViewDidScroll(scrollView: UIScrollView) {
-        scrollViewDidScroll?(scrollView: scrollView)
+    open override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        scrollViewDidScroll?(scrollView)
     }
     
-    public override func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        scrollViewDidEndDragging?(scrollView: scrollView, willDecelerate: decelerate)
+    open override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        scrollViewDidEndDragging?(scrollView, decelerate)
     }
     
     // UICollectionViewDelegate
-    public override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    open override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let result = cellDidSelect?(indexPath) else {
             return
         }
         
         if result.deselect {
-            collectionView.deselectItemAtIndexPath(indexPath, animated: result.animate)
+            collectionView.deselectItem(at: indexPath, animated: result.animate)
         }
     }
     
-    public override func collectionView(collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: NSIndexPath) {
+    open override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         cellDidDeselect?(indexPath)
     }
     
     // UICollectionViewDelegateFlowLayout
-    public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        if let size = estimateCellSize?(collectionView: collectionView, collectionViewLayout: collectionViewLayout, indexPath: indexPath) {
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if let size = estimateCellSize?(collectionView, collectionViewLayout, indexPath) {
             return size
         }
         

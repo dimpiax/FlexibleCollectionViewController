@@ -10,21 +10,21 @@ import Foundation
 import UIKit
 
 public enum SupplementaryKind {
-    case Header, Footer, Custom(String)
+    case header, footer, custom(String)
     
     init(value: String) {
         switch value {
-            case UICollectionElementKindSectionHeader: self = .Header
-            case UICollectionElementKindSectionFooter: self = .Footer
-            default: self = .Custom(value)
+            case UICollectionElementKindSectionHeader: self = .header
+            case UICollectionElementKindSectionFooter: self = .footer
+            default: self = .custom(value)
         }
     }
     
     public var type: String {
         switch self {
-            case .Header: return UICollectionElementKindSectionHeader
-            case .Footer: return UICollectionElementKindSectionFooter
-            case .Custom(let name): return name
+            case .header: return UICollectionElementKindSectionHeader
+            case .footer: return UICollectionElementKindSectionFooter
+            case .custom(let name): return name
         }
     }
 }

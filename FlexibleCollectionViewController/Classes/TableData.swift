@@ -8,9 +8,9 @@
 
 import Foundation
 
-public struct TableData<T: CellDataProtocol, U: ListGeneratorProtocol where U.Item == T> {
-    private var _arr: [T]?
-    private var _generator: U?
+public struct TableData<T: CellDataProtocol, U: ListGeneratorProtocol> where U.Item == T {
+    fileprivate var _arr: [T]?
+    fileprivate var _generator: U?
     
     var sections: Int {
         return _generator?.sections ?? 1
@@ -24,7 +24,7 @@ public struct TableData<T: CellDataProtocol, U: ListGeneratorProtocol where U.It
         _generator = generator
     }
     
-    public mutating func addItem(value: T) {
+    public mutating func addItem(_ value: T) {
         if _arr == nil { _arr = [] }
         _arr!.append(value)
     }
@@ -35,11 +35,11 @@ public struct TableData<T: CellDataProtocol, U: ListGeneratorProtocol where U.It
         _generator?.generate(arr)
     }
     
-    public func getItem(indexPath: NSIndexPath) -> T? {
-        return _generator?.getData(indexPath.section, row: indexPath.row) ?? _arr?[indexPath.row]
+    public func getItem(_ indexPath: IndexPath) -> T? {
+        return _generator?.getData((indexPath as NSIndexPath).section, row: (indexPath as NSIndexPath).row) ?? _arr?[(indexPath as NSIndexPath).row]
     }
     
-    public func getRowsInSection(value: Int) -> Int {
+    public func getRowsInSection(_ value: Int) -> Int {
         return  _generator?.getSectionData(value)?.count ?? _arr?.count ?? 0
     }
 }

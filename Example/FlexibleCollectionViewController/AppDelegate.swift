@@ -8,17 +8,37 @@
 
 import UIKit
 import FlexibleCollectionViewController
+//fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+//  switch (lhs, rhs) {
+//  case let (l?, r?):
+//    return l < r
+//  case (nil, _?):
+//    return true
+//  default:
+//    return false
+//  }
+//}
+//
+//fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+//  switch (lhs, rhs) {
+//  case let (l?, r?):
+//    return l > r
+//  default:
+//    return rhs < lhs
+//  }
+//}
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    private var _flexibleCollectionVC: FlexibleCollectionViewController<CollectionImageCellData, ListGenerator<CollectionImageCellData>>!
+    fileprivate var _flexibleCollectionVC: FlexibleCollectionViewController<CollectionImageCellData, ListGenerator<CollectionImageCellData>>!
     
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        window!.backgroundColor = .whiteColor()
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window!.backgroundColor = .white
         window!.makeKeyAndVisible()
         
         let vc = UIViewController()
@@ -29,18 +49,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         vc.view.addSubview(_flexibleCollectionVC.view)
         
         //
-        _flexibleCollectionVC.registerCell(UICollectionViewCell.self, reuseIdentifier: String(UICollectionViewCell))
-        _flexibleCollectionVC.registerSupplementaryView(UIHeaderImageCollectionView.self, kind: .Header, reuseIdentifier: UIHeaderImageCollectionView.reuseIdentifier)
+        _flexibleCollectionVC.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "UICollectionViewCell")
+        _flexibleCollectionVC.registerSupplementaryView(UIHeaderImageCollectionView.self, kind: .header, reuseIdentifier: UIHeaderImageCollectionView.reuseIdentifier)
         
         _flexibleCollectionVC.requestCellIdentifier = { value in
-            return String(UICollectionViewCell)
+            return "UICollectionViewCell"
         }
         
         _flexibleCollectionVC.requestSupplementaryIdentifier = { value in
             return UIHeaderImageCollectionView.reuseIdentifier
         }
         
-        _flexibleCollectionVC.configureCell = { (cell: UICollectionViewCell, data: CollectionImageCellData?, indexPath: NSIndexPath) in
+        _flexibleCollectionVC.configureCell = { (cell: UICollectionViewCell, data: CollectionImageCellData?, indexPath: IndexPath) in
             guard let data = data else {
                 return false
             }
@@ -50,8 +70,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return true
         }
         
-        _flexibleCollectionVC.configureSupplementary = { (view: UICollectionReusableView, kind: SupplementaryKind, data: CollectionImageCellData?, indexPath: NSIndexPath) in
-            if let view = view as? UIHeaderImageCollectionView, data = data {
+        _flexibleCollectionVC.configureSupplementary = { (view: UICollectionReusableView, kind: SupplementaryKind, data: CollectionImageCellData?, indexPath: IndexPath) in
+            if let view = view as? UIHeaderImageCollectionView, let data = data {
                 
                 view.text = data.category
                 
@@ -66,12 +86,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         _flexibleCollectionVC.estimateCellSize = { value in
-            guard let layout = value.collectionViewLayout as? UICollectionViewFlowLayout else {
+            guard let layout = value.1 as? UICollectionViewFlowLayout else {
                 return nil
             }
             
             let col: CGFloat = 3
-            let width = value.collectionView.bounds.width-(layout.sectionInset.left+layout.sectionInset.right)
+            let width = value.0.bounds.width-(layout.sectionInset.left+layout.sectionInset.right)
             let side = round(width/col)-layout.minimumInteritemSpacing
             return CGSize(width: side, height: side)
         }
@@ -81,15 +101,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
-    private func getData() -> TableData<CollectionImageCellData, ListGenerator<CollectionImageCellData>> {
+    fileprivate func getData() -> TableData<CollectionImageCellData, ListGenerator<CollectionImageCellData>> {
         var data = TableData<CollectionImageCellData, ListGenerator<CollectionImageCellData>>(generator: ListGenerator())
         
         var arr = [CollectionImageCellData]()
         for _ in 0..<100 {
             arr.append(CollectionImageCellData())
         }
-        arr.sortInPlace { value in
-            value.0.category > value.1.category
+        arr.sort { value in
+            value.0.category! > value.1.category!
         }
         arr.forEach { data.addItem($0) }
         
@@ -119,7 +139,7 @@ private struct GalleryConfiguration: CollectionConfigurationProtocol {
     let userInteractionEnabled = true
     let showsHorizontalScrollIndicator = false
     let multipleTouchEnabled = false
-    let backgroundColor = UIColor.clearColor()
+    let backgroundColor = UIColor.clear
 }
 
 class CollectionImageCellData: CellDataProtocol {
@@ -136,7 +156,7 @@ class CollectionImageCellData: CellDataProtocol {
 
 class UIHeaderImageCollectionView: UICollectionReusableView {
     class var reuseIdentifier: String {
-        return String(self)
+        return String(describing: self)
     }
     
     var text: String? {
@@ -145,18 +165,18 @@ class UIHeaderImageCollectionView: UICollectionReusableView {
         }
         set {
             let style = NSMutableParagraphStyle()
-            style.alignment = .Center
+            style.alignment = .center
             _label.attributedText = NSAttributedString(string: newValue ?? "", attributes: [NSFontAttributeName: UIFont(name: "HelveticaNeue", size: 21)!, NSParagraphStyleAttributeName: style])
             _label.sizeToFit()
         }
     }
     
-    private var _label: UILabel!
+    fileprivate var _label: UILabel!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = UIColor.whiteColor()
+        backgroundColor = UIColor.white
         
         _label = UILabel()
         addSubview(_label)
