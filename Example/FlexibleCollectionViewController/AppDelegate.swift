@@ -7,188 +7,37 @@
 //
 
 import UIKit
-import FlexibleCollectionViewController
-//fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-//  switch (lhs, rhs) {
-//  case let (l?, r?):
-//    return l < r
-//  case (nil, _?):
-//    return true
-//  default:
-//    return false
-//  }
-//}
-//
-//fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-//  switch (lhs, rhs) {
-//  case let (l?, r?):
-//    return l > r
-//  default:
-//    return rhs < lhs
-//  }
-//}
-
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
     var window: UIWindow?
-
-    fileprivate var _flexibleCollectionVC: FlexibleCollectionViewController<CollectionImageCellData, ListGenerator<CollectionImageCellData>>!
+    
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window!.backgroundColor = .white
-        window!.makeKeyAndVisible()
-        
-        let vc = UIViewController()
-        window!.rootViewController = vc
-        
-        _flexibleCollectionVC = FlexibleCollectionViewController(collectionViewLayout: CustomFlowLayout(), configuration: GalleryConfiguration())
-        vc.addChildViewController(_flexibleCollectionVC)
-        vc.view.addSubview(_flexibleCollectionVC.view)
-        
-        //
-        _flexibleCollectionVC.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "UICollectionViewCell")
-        _flexibleCollectionVC.registerSupplementaryView(UIHeaderImageCollectionView.self, kind: .header, reuseIdentifier: UIHeaderImageCollectionView.reuseIdentifier)
-        
-        _flexibleCollectionVC.requestCellIdentifier = { value in
-            return "UICollectionViewCell"
-        }
-        
-        _flexibleCollectionVC.requestSupplementaryIdentifier = { value in
-            return UIHeaderImageCollectionView.reuseIdentifier
-        }
-        
-        _flexibleCollectionVC.configureCell = { (cell: UICollectionViewCell, data: CollectionImageCellData?, indexPath: IndexPath) in
-            guard let data = data else {
-                return false
-            }
-            
-            cell.backgroundColor = data.color
-            
-            return true
-        }
-        
-        _flexibleCollectionVC.configureSupplementary = { (view: UICollectionReusableView, kind: SupplementaryKind, data: CollectionImageCellData?, indexPath: IndexPath) in
-            if let view = view as? UIHeaderImageCollectionView, let data = data {
-                
-                view.text = data.category
-                
-                return true
-            }
-            
-            return false
-        }
-        
-        _flexibleCollectionVC.cellDidSelect = { value in
-            return (deselect: true, animate: true)
-        }
-        
-        _flexibleCollectionVC.estimateCellSize = { value in
-            guard let layout = value.1 as? UICollectionViewFlowLayout else {
-                return nil
-            }
-            
-            let col: CGFloat = 3
-            let width = value.0.bounds.width-(layout.sectionInset.left+layout.sectionInset.right)
-            let side = round(width/col)-layout.minimumInteritemSpacing
-            return CGSize(width: side, height: side)
-        }
-        
-        _flexibleCollectionVC.setData(getData())
-        
+        // Override point for customization after application launch.
         return true
     }
     
-    fileprivate func getData() -> TableData<CollectionImageCellData, ListGenerator<CollectionImageCellData>> {
-        var data = TableData<CollectionImageCellData, ListGenerator<CollectionImageCellData>>(generator: ListGenerator())
-        
-        var arr = [CollectionImageCellData]()
-        for _ in 0..<100 {
-            arr.append(CollectionImageCellData())
-        }
-        arr.sort { value in
-            value.0.category! > value.1.category!
-        }
-        arr.forEach { data.addItem($0) }
-        
-        data.generate()
-        return data
-    }
-}
-
-class CustomFlowLayout: UICollectionViewFlowLayout {
-    override init() {
-        super.init()
-        
-        headerReferenceSize = CGSize(width: 0, height: 100)
-        if #available(iOS 9.0, *) {
-            sectionHeadersPinToVisibleBounds = true
-        } else {
-            // Fallback on earlier versions
-        }
+    func applicationWillResignActive(_ application: UIApplication) {
+        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
+        // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-private struct GalleryConfiguration: CollectionConfigurationProtocol {
-    let userInteractionEnabled = true
-    let showsHorizontalScrollIndicator = false
-    let multipleTouchEnabled = false
-    let backgroundColor = UIColor.clear
-}
-
-class CollectionImageCellData: CellDataProtocol {
-    var title: String { return "B" }
-    var category: String? = nil
-    
-    init() {
-        category = ["Section One", "Section Two", "Section #N"][Int(arc4random_uniform(3))]
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
+        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     }
     
-    
-    var color: UIColor { return UIColor(red: CGFloat(arc4random_uniform(155)+100)/255, green: CGFloat(arc4random_uniform(155)+100)/255, blue: CGFloat(arc4random_uniform(155)+100)/255, alpha: 1) }
-}
-
-class UIHeaderImageCollectionView: UICollectionReusableView {
-    class var reuseIdentifier: String {
-        return String(describing: self)
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     }
     
-    var text: String? {
-        get {
-            return _label.text
-        }
-        set {
-            let style = NSMutableParagraphStyle()
-            style.alignment = .center
-            _label.attributedText = NSAttributedString(string: newValue ?? "", attributes: [NSFontAttributeName: UIFont(name: "HelveticaNeue", size: 21)!, NSParagraphStyleAttributeName: style])
-            _label.sizeToFit()
-        }
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
     
-    fileprivate var _label: UILabel!
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        backgroundColor = UIColor.white
-        
-        _label = UILabel()
-        addSubview(_label)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        _label.frame = bounds
+    func applicationWillTerminate(_ application: UIApplication) {
+        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 }

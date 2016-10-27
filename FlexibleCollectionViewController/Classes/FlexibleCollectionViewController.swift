@@ -29,19 +29,20 @@ open class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenerato
     
     fileprivate var _data: TableData<T, U>?
     
-    convenience init(configuration: CollectionConfigurationProtocol) {
+    convenience init(configuration: CollectionConfiguration) {
         self.init(collectionViewLayout: UICollectionViewFlowLayout(), configuration: configuration)
     }
     
-    public init(collectionViewLayout layout: UICollectionViewLayout, configuration: CollectionConfigurationProtocol) {
+    public init(collectionViewLayout layout: UICollectionViewLayout, configuration: CollectionConfiguration) {
         super.init(collectionViewLayout: layout)
         
         collectionView!.isUserInteractionEnabled = configuration.userInteractionEnabled
         collectionView!.showsHorizontalScrollIndicator = configuration.showsHorizontalScrollIndicator
+        collectionView!.isScrollEnabled = configuration.isScrollEnabled
         collectionView!.isMultipleTouchEnabled = configuration.multipleTouchEnabled
+        collectionView!.backgroundColor = configuration.backgroundColor
         
         collectionView!.delegate = self
-        collectionView!.backgroundColor = configuration.backgroundColor
     }
 
     required public init?(coder aDecoder: NSCoder) {

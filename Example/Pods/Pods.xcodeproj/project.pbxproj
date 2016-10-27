@@ -14,7 +14,7 @@
 		5D0C067F54D93730BBC1423205C95F57 /* CellDataProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E473E3B687332DF1D83A235A364B4314 /* CellDataProtocol.swift */; };
 		602EC73CC1FE2D6EEED39C8A4AD6C013 /* FlexibleCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F71840F1C2068634568CD30D2C61F0F /* FlexibleCollectionViewController.swift */; };
 		949EA8862BDBD09E7DCD8B399F025A2C /* ListGeneratorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0E880140FC79687ECA47899D92B6EF5 /* ListGeneratorProtocol.swift */; };
-		9DA552A3A1F86D86C77F8574C58E71C4 /* CollectionConfigurationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73E0D7B541D7F23ED82F2413BF2004D /* CollectionConfigurationProtocol.swift */; };
+		9DA552A3A1F86D86C77F8574C58E71C4 /* CollectionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73E0D7B541D7F23ED82F2413BF2004D /* CollectionConfiguration.swift */; };
 		B5C6C81023943742D2557F09D4E2768E /* Pods-FlexibleCollectionViewController_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = CA49BDEDA4DCBC688898C4416CE3C55E /* Pods-FlexibleCollectionViewController_Example-dummy.m */; };
 		B8DB33100F5FF6F16F769CD6608FEFCC /* FlexibleCollectionViewController-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = ACFE9C1A473BCD3C2E33F0B215E0F2F4 /* FlexibleCollectionViewController-dummy.m */; };
 		E66B989E3E7F6E7192348BC2BBF0F85F /* ListGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E108A62AD70BFAC857F07725122CB4AB /* ListGenerator.swift */; };
@@ -47,7 +47,7 @@
 		7F71840F1C2068634568CD30D2C61F0F /* FlexibleCollectionViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FlexibleCollectionViewController.swift; sourceTree = "<group>"; };
 		8E0743F0FCA20C609BB61A29CA310306 /* Pods-FlexibleCollectionViewController_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-FlexibleCollectionViewController_Example-umbrella.h"; sourceTree = "<group>"; };
 		A0E880140FC79687ECA47899D92B6EF5 /* ListGeneratorProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ListGeneratorProtocol.swift; sourceTree = "<group>"; };
-		A73E0D7B541D7F23ED82F2413BF2004D /* CollectionConfigurationProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CollectionConfigurationProtocol.swift; sourceTree = "<group>"; };
+		A73E0D7B541D7F23ED82F2413BF2004D /* CollectionConfiguration.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CollectionConfiguration.swift; sourceTree = "<group>"; };
 		ACFE9C1A473BCD3C2E33F0B215E0F2F4 /* FlexibleCollectionViewController-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "FlexibleCollectionViewController-dummy.m"; sourceTree = "<group>"; };
 		AFB803F54D9E018A490DFD432AD5C2AE /* Pods-FlexibleCollectionViewController_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-FlexibleCollectionViewController_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
 		BA6428E9F66FD5A23C0A2E06ED26CD2F /* Podfile */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -145,7 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				E473E3B687332DF1D83A235A364B4314 /* CellDataProtocol.swift */,
-				A73E0D7B541D7F23ED82F2413BF2004D /* CollectionConfigurationProtocol.swift */,
+				A73E0D7B541D7F23ED82F2413BF2004D /* CollectionConfiguration.swift */,
 				7F71840F1C2068634568CD30D2C61F0F /* FlexibleCollectionViewController.swift */,
 				E108A62AD70BFAC857F07725122CB4AB /* ListGenerator.swift */,
 				A0E880140FC79687ECA47899D92B6EF5 /* ListGeneratorProtocol.swift */,
@@ -296,7 +296,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5D0C067F54D93730BBC1423205C95F57 /* CellDataProtocol.swift in Sources */,
-				9DA552A3A1F86D86C77F8574C58E71C4 /* CollectionConfigurationProtocol.swift in Sources */,
+				9DA552A3A1F86D86C77F8574C58E71C4 /* CollectionConfiguration.swift in Sources */,
 				B8DB33100F5FF6F16F769CD6608FEFCC /* FlexibleCollectionViewController-dummy.m in Sources */,
 				602EC73CC1FE2D6EEED39C8A4AD6C013 /* FlexibleCollectionViewController.swift in Sources */,
 				E66B989E3E7F6E7192348BC2BBF0F85F /* ListGenerator.swift in Sources */,

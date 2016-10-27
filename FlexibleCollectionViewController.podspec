@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'FlexibleCollectionViewController'
-  s.version          = '2.0.1'
+  s.version          = '2.0.2'
   s.summary          = 'Generic collection view controller with external data processing'
 
 # This description is used to generate tags and improve search results.
@@ -18,7 +18,9 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-Swift library of generic collection view controller with external data processing of functionality, like determine cell’s reuseIdentifier related to indexPath, configuration of requested cell for display and cell selection handler
+Swift library of generic collection view controller with external data processing of functionality,
+like determine cell's `reuseIdentifier` related to `indexPath`,
+configuration of requested cell for display and cell selection handler etc
                        DESC
 
   s.homepage         = 'https://github.com/dimpiax/FlexibleCollectionViewController'
@@ -34,12 +36,4 @@ Swift library of generic collection view controller with external data processin
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'FlexibleCollectionViewController/Classes/**/*'
-  
-  # s.resource_bundles = {
-  #   'FlexibleCollectionViewController' => ['FlexibleCollectionViewController/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end
