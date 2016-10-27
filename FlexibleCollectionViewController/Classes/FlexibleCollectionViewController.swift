@@ -75,7 +75,7 @@ open class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenerato
         }
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
-        configureCell?(cell, _data?.getItem(indexPath), indexPath)
+        _ = configureCell?(cell, _data?.getItem(indexPath), indexPath)
         
         return cell
     }
@@ -86,25 +86,25 @@ open class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenerato
         }
         
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)
-        configureSupplementary?(view, SupplementaryKind(value: kind), _data?.getItem(indexPath), indexPath)
+        _ = configureSupplementary?(view, SupplementaryKind(value: kind), _data?.getItem(indexPath), indexPath)
         
         return view
     }
     
     open override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        willDisplayCell?(cell, _data?.getItem(indexPath), indexPath)
+        _ = willDisplayCell?(cell, _data?.getItem(indexPath), indexPath)
     }
     
     open override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        didEndDisplayingCell?(cell, _data?.getItem(indexPath), indexPath)
+        _ = didEndDisplayingCell?(cell, _data?.getItem(indexPath), indexPath)
     }
     
     open override func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
-        willDisplaySupplementary?(view, SupplementaryKind(value: elementKind), _data?.getItem(indexPath), indexPath)
+        _ = willDisplaySupplementary?(view, SupplementaryKind(value: elementKind), _data?.getItem(indexPath), indexPath)
     }
     
     open override func collectionView(_ collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, at indexPath: IndexPath) {
-        didEndDisplayingSupplementary?(view, SupplementaryKind(value: elementKind), _data?.getItem(indexPath), indexPath)
+        _ = didEndDisplayingSupplementary?(view, SupplementaryKind(value: elementKind), _data?.getItem(indexPath), indexPath)
     }
     
     open override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -135,7 +135,7 @@ open class FlexibleCollectionViewController<T: CellDataProtocol, U: ListGenerato
     }
     
     open override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        cellDidDeselect?(indexPath)
+        _ = cellDidDeselect?(indexPath)
     }
     
     // UICollectionViewDelegateFlowLayout
