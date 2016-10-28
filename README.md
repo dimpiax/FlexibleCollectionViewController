@@ -9,7 +9,6 @@ Swift library of generic collection view controller with external data processin
 like determine cell's `reuseIdentifier` related to `indexPath`, 
 configuration of requested cell for display and cell selection handler etc
 
-
 ## Example
 
 Initialisation with configuration 

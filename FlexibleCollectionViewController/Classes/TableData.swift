@@ -12,12 +12,16 @@ public struct TableData<T: CellDataProtocol, U: ListGeneratorProtocol> where U.I
     fileprivate var _arr: [T]?
     fileprivate var _generator: U?
     
-    var sections: Int {
+    public var sections: Int {
         return _generator?.sections ?? 1
     }
     
-    var isEmpty: Bool {
+    public var isEmpty: Bool {
         return _arr?.isEmpty != false
+    }
+    
+    public init() {
+        // empty
     }
     
     public init(generator: U) {
@@ -36,7 +40,7 @@ public struct TableData<T: CellDataProtocol, U: ListGeneratorProtocol> where U.I
     }
     
     public func getItem(_ indexPath: IndexPath) -> T? {
-        return _generator?.getData((indexPath as NSIndexPath).section, row: (indexPath as NSIndexPath).row) ?? _arr?[(indexPath as NSIndexPath).row]
+        return _generator?.getData(indexPath.section, row: indexPath.row) ?? _arr?[indexPath.row]
     }
     
     public func getRowsInSection(_ value: Int) -> Int {
