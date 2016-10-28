@@ -9,36 +9,35 @@ Swift library of generic collection view controller with external data processin
 like determine cell's `reuseIdentifier` related to `indexPath`, 
 configuration of requested cell for display and cell selection handler etc
 
-
 ## Example
 
 Initialisation with configuration 
-```
+```swift
 _flexibleCollectionVC = FlexibleCollectionViewController(collectionViewLayout: CustomFlowLayout(), configuration: CollectionConfiguration(userInteractionEnabled: true, showsHorizontalScrollIndicator: false, isScrollEnabled: true, multipleTouchEnabled: false, backgroundColor: .clear))
 ```
 
 Cell and supplementary view registering
-```
+```swift
 _flexibleCollectionVC.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "UICollectionViewCell")
 _flexibleCollectionVC.registerSupplementaryView(UIHeaderImageCollectionView.self, kind: .header, reuseIdentifier: UIHeaderImageCollectionView.reuseIdentifier)
 ```
 
 Requesting indentifier of cell for specific indexPath
-```
+```swift
 _flexibleCollectionVC.requestCellIdentifier = { value in
   return "UICollectionViewCell"
 }
 ```
 
 Requesting indentifier of supplementary view for specific indexPath
-```
+```swift
 _flexibleCollectionVC.requestSupplementaryIdentifier = { value in
   return UIHeaderImageCollectionView.reuseIdentifier
 }
 ```
 
 Configuration of input cell with related data to indexPath
-```
+```swift
 _flexibleCollectionVC.configureCell = { (cell: UICollectionViewCell, data: CollectionImageCellData?, indexPath: IndexPath) in
   guard let data = data else {
     return false
@@ -51,7 +50,7 @@ _flexibleCollectionVC.configureCell = { (cell: UICollectionViewCell, data: Colle
 ```
 
 Configuration of supplementary view with related kind and data to indexPath
-```
+```swift
 _flexibleCollectionVC.configureSupplementary = { (view: UICollectionReusableView, kind: SupplementaryKind, data: CollectionImageCellData?, indexPath: IndexPath) in
   if let view = view as? UIHeaderImageCollectionView, let data = data {
     view.text = data.category
@@ -64,14 +63,14 @@ _flexibleCollectionVC.configureSupplementary = { (view: UICollectionReusableView
 ```
 
 Process cell selection to related indexPath
-```
+```swift
 _flexibleCollectionVC.cellDidSelect = { value in
   return (deselect: true, animate: true)
 }
 ```
 
 Estimate cell size
-```
+```swift
 _flexibleCollectionVC.estimateCellSize = { value in
   guard let layout = value.1 as? UICollectionViewFlowLayout else {
     return nil
@@ -85,7 +84,7 @@ _flexibleCollectionVC.estimateCellSize = { value in
 ```
 
 Put predefined cells in generated order related to ListGenerator
-```
+```swift
 _flexibleCollectionVC.setData(getData())
 ```
 
